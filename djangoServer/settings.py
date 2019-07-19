@@ -11,9 +11,16 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import sys
+
+# 导入个人配置
+from djangoServer.myconfig import my_config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 添加检索路径
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -31,13 +38,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # 在生成 users（AUTH_USER_MODEL）数据表前，先把首行admin注释掉，否则users表无法生成，
+    # 并与之后放开，否则/admin无法访问
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users'
 ]
+
+# 自定义model名: app + class
+AUTH_USER_MODEL = 'users.UserProfile'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,8 +88,16 @@ WSGI_APPLICATION = 'djangoServer.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': my_config['MYSQL_DBNAME'],
+        'USER': my_config['MYSQL_USER'],
+        'PASSWORD': my_config['MYSQL_PASSWORD'],
+        'HOST': my_config['MYSQL_HOST'],
+        'PORT': my_config['MYSQL_PORT'],
+        'OPTIONS': {
+            # "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+            "init_command": "SET foreign_key_checks=0;"
+        }
     }
 }
 
