@@ -32,7 +32,7 @@ class ComponentCategory(models.Model):
         choices=CATEGORY_TYPE, verbose_name='类目级别', help_text='类目级别')
     parent_category = models.ForeignKey(
         'self', null=True, blank=True, verbose_name='父类目级别', help_text='父目录',
-        related_name='sub_cat')
+        related_name='children')
     is_nav = models.BooleanField(
         default=False, verbose_name='是否导航', help_text='是否导航')
     add_time = models.DateTimeField(
