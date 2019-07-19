@@ -1,3 +1,9 @@
 /djangoServer/myconfig.*
 /**/__pycache__/*
-/apps/**/migrations/*
+
+# 这里谨防踩坑，若migrations目录下丢失__init__.py，
+# 则makemigrations无法生成.py对比记录
+/apps/**/migrations/[0-9]*.py
+/extra_apps/xadmin/migrations/[0-9]*.py
+/media/**
+/db_tools/data/*
