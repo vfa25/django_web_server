@@ -16,7 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import url, include
 # from django.urls import path
+import xadmin
 
+# xadmin 首次登陆，创建超级用户 python manage.py createsuperuser
 urlpatterns = [
-    url('admin/', admin.site.urls),
+    url('xadmin/', xadmin.site.urls),
 ]

@@ -1,3 +1,5 @@
 /djangoServer/myconfig.*
 /**/__pycache__/*
 /apps/**/migrations/*
+
+/extra_apps/**
