@@ -24,8 +24,8 @@ class ComponentCategory(models.Model):
     )
     name = models.CharField(
         default='', max_length=30, verbose_name='类别名', help_text='类别名')
-    code = models.CharField(
-        default='', max_length=30, verbose_name='类别code', help_text='类别code')
+    key = models.CharField(
+        default='', max_length=30, verbose_name='类别key', help_text='类别key')
     desc = models.TextField(
         default='', verbose_name='类别描述', help_text='类别描述')
     category_type = models.IntegerField(
