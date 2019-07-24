@@ -1,6 +1,6 @@
 '''
 业务点：
-以官网Component的左侧一级tab栏为一级类，左侧二级tab为二级类，内容区组件分类为三级类
+以官网Component的左侧一级tab栏为一级类，左侧二级tab为二级类
 
 技术点：
 1. 父类外键指向自己：models.ForeignKey('self'。。。）
@@ -20,7 +20,6 @@ class ComponentCategory(models.Model):
     CATEGORY_TYPE = (
         (1, '一级类目'),
         (2, '二级类目'),
-        (3, '三级类目'),
     )
     name = models.CharField(
         default='', max_length=30, verbose_name='类别名', help_text='类别名')

@@ -7,17 +7,10 @@ rest_framework提供 Serializer 和 ModelSerializer API，
 
 from rest_framework import serializers
 
-from .models import ComponentCategory
-
-
-class CategorySerializerLeast(serializers.ModelSerializer):
-    class Meta:
-        model = ComponentCategory
-        fields = '__all__'
+from .models import ComponentCategory, Component
 
 
 class CategorySerializerSecondary(serializers.ModelSerializer):
-    children = CategorySerializerLeast(many=True)
 
     class Meta:
         model = ComponentCategory
@@ -29,4 +22,11 @@ class CategorySerializerPrimary(serializers.ModelSerializer):
 
     class Meta:
         model = ComponentCategory
+        fields = '__all__'
+
+class ComponentSerializer(serializers.ModelSerializer):
+    category = CategorySerializerSecondary()
+
+    class Meta:
+        model = Component
         fields = '__all__'

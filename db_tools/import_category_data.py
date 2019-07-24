@@ -25,13 +25,12 @@ for item in row_data:
     print(hash_key_primary)
     hash_key_secondary = get_md5(
         item['secondary_title'] + item['secondary_key'])
-    hash_key_least = get_md5(item['least_title'] + item['least_key'])
 
     if hash_key_primary in hashMap:
         primary_instance = hashMap[hash_key_primary]
     else:
         primary_instance = ComponentCategory()
-        primary_instance.name = item['primary_title']
+        primary_instance.desc = item['primary_title']
         primary_instance.category_type = 1
         hashMap[hash_key_primary] = primary_instance
         primary_instance.save()
@@ -40,17 +39,11 @@ for item in row_data:
         secondary_instance = hashMap[hash_key_secondary]
     else:
         secondary_instance = ComponentCategory()
-        secondary_instance.name = item['secondary_title']
+        secondary_instance.name = item['secondary_name']
+        secondary_instance.desc = item['secondary_title']
         secondary_instance.key = item['secondary_key']
+
         secondary_instance.category_type = 2
         hashMap[hash_key_secondary] = secondary_instance
         secondary_instance.parent_category = primary_instance
         secondary_instance.save()
-
-    if hash_key_least not in hashMap:
-        least_instance = ComponentCategory()
-        least_instance.name = item['least_title']
-        least_instance.key = item['least_key']
-        least_instance.category_type = 3
-        least_instance.parent_category = secondary_instance
-        least_instance.save()

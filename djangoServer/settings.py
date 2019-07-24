@@ -82,22 +82,29 @@ INSTALLED_APPS = [
     # DRF
     'rest_framework',
     # filters开源应用
-    'django_filters'
+    'django_filters',
+    # core跨域放行 https://pypi.org/project/django-cors-headers/2.5.3/
+    # 'corsheaders'
     # 'captcha'
 ]
 
 # 自定义model名: app + class
 AUTH_USER_MODEL = 'users.UserProfile'
 
+# cors 跨域放行
+# CORS_ORIGIN_ALLOW_ALL = True
+
 MIDDLEWARE = [
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'djangoServer.urls'
 

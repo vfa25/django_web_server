@@ -13,9 +13,11 @@ from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
+from .filters import ComponentFilter
 
-from .models import ComponentCategory
-from .serializers import (CategorySerializerPrimary, CategorySerializerSecondary)
+from .models import ComponentCategory, Component
+from .serializers import (
+    CategorySerializerPrimary, CategorySerializerSecondary, ComponentSerializer)
 
 
 class CategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -35,3 +37,23 @@ class CategoryBlockViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     '''
     queryset = ComponentCategory.objects.filter(category_type=2)
     serializer_class = CategorySerializerSecondary
+
+
+class ComponentPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    page_query_param = 'page'
+    max_page_size = 100
+
+class ComponentListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    '''
+    组件列表页：序列化、分页、辅助API调试、过滤、搜索、排序
+    '''
+    queryset = Component.objects.all()
+    serializer_class = ComponentSerializer
+    pagination_class = ComponentPagination
+    filter_backends = (
+        DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+    filter_class = ComponentFilter
+    search_fields = ('name', 'component_brief')
+    ordering_fields = ('easy_to_use', 'add_time')
