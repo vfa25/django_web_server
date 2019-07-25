@@ -17,10 +17,10 @@ from .filters import ComponentFilter
 
 from .models import ComponentCategory, Component
 from .serializers import (
-    CategorySerializerPrimary, CategorySerializerSecondary, ComponentSerializer)
+    CategorySerializerPrimary, ComponentSerializer)
 
 
-class CategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     '''
     list:
         组件分类列表数据
@@ -29,21 +29,12 @@ class CategoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = CategorySerializerPrimary
 
 
-class CategoryBlockViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin,
-                           viewsets.GenericViewSet):
-    '''
-    list:
-        左侧路由下Block列表数据
-    '''
-    queryset = ComponentCategory.objects.filter(category_type=2)
-    serializer_class = CategorySerializerSecondary
-
-
 class ComponentPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 5
     page_size_query_param = 'page_size'
     page_query_param = 'page'
     max_page_size = 100
+
 
 class ComponentListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     '''
@@ -57,3 +48,4 @@ class ComponentListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_class = ComponentFilter
     search_fields = ('name', 'component_brief')
     ordering_fields = ('easy_to_use', 'add_time')
+    ordering = ['-add_time']
