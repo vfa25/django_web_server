@@ -41,6 +41,10 @@ class ComponentCategory(models.Model):
         verbose_name = '组件类别'
         verbose_name_plural = verbose_name
 
+    def get_course_component(self):
+        # _set反选
+        return self.component_set.all()
+
     def __str__(self):
         return self.name
 

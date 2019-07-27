@@ -12,18 +12,18 @@ class ComponentFilter(filters.FilterSet):
     '''
     过滤类
     '''
-    num_min = filters.NumberFilter(
+    hardNumMin = filters.NumberFilter(
         field_name='easy_to_use', lookup_expr='gte')
-    num_max = filters.NumberFilter(
+    hardNumMax = filters.NumberFilter(
         field_name='easy_to_use', lookup_expr='lte')
     # name = filters.CharFilter(
     #     field_name='name', lookup_expr='contains')
-    top_category = filters.NumberFilter(method='top_category_filter')
+    cmpCategory = filters.NumberFilter(method='cmp_category_filter')
 
-    def top_category_filter(self, queryset, name, value):
+    def cmp_category_filter(self, queryset, name, value):
         return queryset.filter(
             Q(category_id=value) | Q(category__parent_category_id=value))
 
     class Meta:
         model = Component
-        fields = ['num_min', 'num_max']
+        fields = ['hardNumMin', 'hardNumMax']

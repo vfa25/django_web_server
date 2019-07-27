@@ -5,6 +5,7 @@
     如果不使用过滤器，就需手动实现get_queryset方法，后者在mixins.ListModelMixin源码里一看便知
 '''
 
+from django.db.models import Q
 from rest_framework.response import Response
 # https://www.django-rest-framework.org/tutorial/3-class-based-views/#using-mixins
 from rest_framework import mixins
@@ -17,7 +18,7 @@ from .filters import ComponentFilter
 
 from .models import ComponentCategory, Component
 from .serializers import (
-    CategorySerializerPrimary, ComponentSerializer)
+    CategorySerializerPrimary, ComponentSerializer, CategorySerializerSecondary)
 
 
 class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -49,3 +50,17 @@ class ComponentListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     search_fields = ('name', 'component_brief')
     ordering_fields = ('easy_to_use', 'add_time')
     ordering = ['-add_time']
+
+class SearchCagetoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+    serializer_class = CategorySerializerSecondary
+    filter_backends = (filters.SearchFilter,)
+
+    def get_queryset(self):
+        search = self.request.query_params.get('search', '')
+        if not search:
+            return ComponentCategory.objects.none()
+        components = Component.objects.filter(
+            Q(name__icontains=search) | Q(component_brief__icontains=search))
+        category_ids = [component.category.id for component in components]
+        categorys = ComponentCategory.objects.filter(id__in=category_ids)
+        return categorys

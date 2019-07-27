@@ -22,7 +22,7 @@ from djangoServer.settings import MEDIA_ROOT
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from antd_cmp.views import (
-    CategoryViewset, ComponentListViewSet)
+    CategoryViewset, ComponentListViewSet, SearchCagetoryViewset)
 
 
 # create a router and register out viewsets with it
@@ -31,6 +31,7 @@ router = DefaultRouter()
 # category的url
 router.register(r'categorys', CategoryViewset, base_name='categorys')
 router.register(r'components', ComponentListViewSet, base_name='components')
+router.register(r'search', SearchCagetoryViewset, base_name='search')
 
 
 # xadmin 首次登陆，创建超级用户 python manage.py createsuperuser

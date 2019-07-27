@@ -21,6 +21,7 @@ from utils.common import get_md5
 for component_detail in row_data:
     component = Component()
     component.name = component_detail['name']
+    component.component_code = component_detail['key']
     component.easy_to_use = int(component_detail['easy_to_use'])
     component.component_brief = (
         component_detail['desc'] if component_detail['desc'] is not None else '')
