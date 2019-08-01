@@ -28,8 +28,7 @@ class CategorySerializerSecondary(CategoryOriginSerializerSecondary):
         result_json = super().to_representation(obj)
         if self.context and self.context['request']:
             search = self.context['request'].query_params.get('search', '')
-            category = ComponentCategory.objects.get(id=result_json['id'])
-            components = category.component_set.filter(
+            components = obj.component_set.filter(
                 Q(name__icontains=search) | Q(component_brief__icontains=search))
             result_json['children'] = ComponentOriginSerializer(
                 components, many=True).data

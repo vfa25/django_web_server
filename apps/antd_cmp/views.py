@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import filters
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
@@ -28,7 +29,19 @@ class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
     '''
     queryset = ComponentCategory.objects.filter(category_type=1)
     serializer_class = CategorySerializerPrimary
+    # authentication_classes = (TokenAuthentication,)
 
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class ComponentPagination(PageNumberPagination):
     page_size = 5
@@ -53,7 +66,6 @@ class ComponentListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 class SearchCagetoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = CategorySerializerSecondary
-    filter_backends = (filters.SearchFilter,)
 
     def get_queryset(self):
         search = self.request.query_params.get('search', '')
@@ -61,6 +73,4 @@ class SearchCagetoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
             return ComponentCategory.objects.none()
         components = Component.objects.filter(
             Q(name__icontains=search) | Q(component_brief__icontains=search))
-        category_ids = [component.category.id for component in components]
-        categorys = ComponentCategory.objects.filter(id__in=category_ids)
-        return categorys
+        return [component.category for component in components]

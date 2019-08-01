@@ -15,23 +15,30 @@ Including another URLconf
 """
 from django.views.static import serve
 from django.conf.urls import url, include
+# from rest_framework.authtoken import views
+from rest_framework_jwt.views import obtain_jwt_token
 # from django.urls import path
 import xadmin
 from djangoServer.settings import MEDIA_ROOT
 
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
-from antd_cmp.views import (
-    CategoryViewset, ComponentListViewSet, SearchCagetoryViewset)
 
+
+from antd_cmp.views import (
+    CategoryViewset, SearchCagetoryViewset)
+from users.views import (
+    SmsCodeViewset, MobileRegisterViewset)
 
 # create a router and register out viewsets with it
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 
 # category的url
 router.register(r'categorys', CategoryViewset, base_name='categorys')
-router.register(r'components', ComponentListViewSet, base_name='components')
 router.register(r'search', SearchCagetoryViewset, base_name='search')
+router.register(r'smscode', SmsCodeViewset, base_name='smscode')
+router.register(r'register/mobile', MobileRegisterViewset,
+                base_name='mobileRegister')
 
 
 # xadmin 首次登陆，创建超级用户 python manage.py createsuperuser
@@ -47,4 +54,10 @@ urlpatterns = [
 
     # https://www.django-rest-framework.org/tutorial/6-viewsets-and-routers/#using-routers
     url('', include(router.urls)),
+
+    # https://www.django-rest-framework.org/api-guide/authentication/#by-exposing-an-api-endpoint
+    # url(r'^api-token-auth/', views.obtain_auth_token)
+
+    # http://jpadilla.github.io/django-rest-framework-jwt/
+    url(r'^login$', obtain_jwt_token)
 ]

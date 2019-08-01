@@ -12,9 +12,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import sys
+import datetime
 
 # 导入个人配置
-from djangoServer.myconfig import my_config
+from djangoServer.myconfig import my_config, YUNPIAN_API_KEY
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -86,6 +87,8 @@ INSTALLED_APPS = [
     # core跨域放行 https://pypi.org/project/django-cors-headers/2.5.3/
     # 'corsheaders'
     # 'captcha'
+    # 服务端登录使用了token认证模式 https://www.django-rest-framework.org/api-guide/authentication/
+    # 'rest_framework.authtoken'
 ]
 
 # 自定义model名: app + class
@@ -94,6 +97,8 @@ AUTH_USER_MODEL = 'users.UserProfile'
 # cors 跨域放行
 # CORS_ORIGIN_ALLOW_ALL = True
 
+# 中间件执行顺序：
+# process_request 会从前至后；process_response 会从后至前
 MIDDLEWARE = [
     # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -191,5 +196,27 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# REST_FRAMEWORK = {
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 下方的两个 DRF authentication 是默认设置，且所做的逻辑并不多，仅取出了request.user
+        # 作用是使接口文档的登录API同步
+        # 登录本质仍依赖于django的原生中间件 AuthenticationMiddleware 和 SessionMiddleware
+        # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ]
+}
+
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT'
+}
+
+#手机号码正则表达式
+REGEX_MOBILE = '^1[358]\d{9}$|^147\d{8}$|^176\d{8}$'
+
+APPEND_SLASH = False
