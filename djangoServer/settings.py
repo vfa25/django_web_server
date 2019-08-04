@@ -35,7 +35,7 @@ SECRET_KEY = 'n_+o62(mk)#m&aei!grh%n=9ey4y&v4*cnq@z%*+ftj%$88*%-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '47.110.224.7', 'www.vfa25.cn']
 
 # 日志测试
 LOGGING = {
@@ -192,6 +192,11 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 该属性用于prd
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# 该属性用以dev
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
