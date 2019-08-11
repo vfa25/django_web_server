@@ -6,3 +6,4 @@
 # /apps/**/migrations/[0-9]*.py
 # /extra_apps/xadmin/migrations/[0-9]*.py
 /media/**
+node_modules
