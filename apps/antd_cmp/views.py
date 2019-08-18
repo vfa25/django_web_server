@@ -31,7 +31,6 @@ class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
     serializer_class = CategorySerializerPrimary
     # authentication_classes = (TokenAuthentication,)
 
-
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -42,6 +41,7 @@ class CategoryViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
 
 class ComponentPagination(PageNumberPagination):
     page_size = 5
@@ -64,8 +64,16 @@ class ComponentListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     ordering_fields = ('easy_to_use', 'add_time')
     ordering = ['-add_time']
 
+
 class SearchCagetoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
+
     serializer_class = CategorySerializerSecondary
+    search_fields = ('placeholder',)
+    filter_backends = (
+        DjangoFilterBackend, filters.SearchFilter)
+
+    def filter_queryset(self, *args, **kwargs):
+        return self.get_queryset()
 
     def get_queryset(self):
         search = self.request.query_params.get('search', '')
@@ -73,4 +81,4 @@ class SearchCagetoryViewset(mixins.ListModelMixin, viewsets.GenericViewSet):
             return ComponentCategory.objects.none()
         components = Component.objects.filter(
             Q(name__icontains=search) | Q(component_brief__icontains=search))
-        return [component.category for component in components]
+        return list(set([component.category for component in components]))
