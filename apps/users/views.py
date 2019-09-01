@@ -10,6 +10,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
+from braces.views import CsrfExemptMixin
 
 from djangoServer.settings import YUNPIAN_API_KEY
 from .serializers import (
@@ -33,10 +34,12 @@ class CustomBackend(ModelBackend):
             return None
 
 
-class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
+class SmsCodeViewset(CsrfExemptMixin, CreateModelMixin, viewsets.GenericViewSet):
     '''
     发送短信验证码
     '''
+
+    authentication_classes = []
     serializer_class = SmsSerializer
 
     def generate_code(self):
@@ -69,10 +72,12 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
             }, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class MobileRegisterViewset(CreateModelMixin, viewsets.GenericViewSet):
+class MobileRegisterViewset(CsrfExemptMixin, CreateModelMixin, viewsets.GenericViewSet):
     '''
     用户：重写create（辅助函数perform_create）以定制返回
     '''
+
+    authentication_classes = []
     serializer_class = MobileRegisterSerializer
     queryset = User.objects.all()
 

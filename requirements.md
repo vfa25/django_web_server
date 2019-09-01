@@ -4,6 +4,7 @@ chardet==3.0.4
 coreapi==2.3.3
 coreschema==0.0.4
 Django==1.11
+django-braces==1.13.0
 django-crispy-forms==1.7.2
 django-filter==2.2.0
 django-formtools==2.1
